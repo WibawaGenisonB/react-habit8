@@ -9,12 +9,19 @@ export default function Meme() {
    * Log the URL of the image to the console. (Don't worry
    * about displaying the image yet)
    */
+  function handleOnClick() {
+    const memesArray = memesData.data.memes
+    const randomNumber = Math.floor(Math.random() * memesData.data.memes.length)
+    console.log(memesArray[randomNumber].url)
+  }
   return (
     <main>
       <div className="form">
         <input type="text" placeholder="Top text" className="form--input" />
         <input type="text" placeholder="Bottom text" className="form--input" />
-        <button className="form--button">Get a new meme image 🖼</button>
+        <button className="form--button" onClick={handleOnClick}>
+          Get a new meme image 🖼
+        </button>
       </div>
     </main>
   )
