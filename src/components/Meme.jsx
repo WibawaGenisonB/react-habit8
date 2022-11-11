@@ -2,23 +2,6 @@ import React from "react"
 import memesData from "../memesData.js"
 
 export default function Meme() {
-  /**
-   * Challenge: Update our state to save the meme-related
-   * data as an object called `meme`. It should have the
-   * following 3 properties:
-   * topText, bottomText, randomImage.
-   *
-   * The 2 text states can default to empty strings for now,
-   * amd randomImage should default to "http://i.imgflip.com/1bij.jpg"
-   *
-   * Next, create a new state variable called `allMemeImages`
-   * which will default to `memesData`, which we imported above
-   *
-   * Lastly, update the `getMemeImage` function and the markup
-   * to reflect our newly reformed state object and array in the
-   * correct way.
-   */
-
   const [meme, setMeme] = React.useState({
     topText: "",
     bottomText: "",
@@ -40,11 +23,49 @@ export default function Meme() {
     })
   }
 
+  const [formData, setFormData] = React.useState({
+    topText: "",
+    botText: "",
+    comments: "",
+  })
+
+  function handleChange(event) {
+    setFormData((prevData) => {
+      return {
+        ...prevData,
+        [event.target.name]: event.target.value,
+      }
+    })
+    console.log(formData)
+  }
+
   return (
     <main>
       <div className="form">
-        <input type="text" placeholder="Top text" className="form--input" />
-        <input type="text" placeholder="Bottom text" className="form--input" />
+        <input
+          type="text"
+          placeholder="Top text"
+          className="form--input"
+          name="topText"
+          onChange={handleChange}
+          value={formData.topText}
+        />
+        <input
+          type="text"
+          placeholder="Bottom text"
+          className="form--input"
+          name="botText"
+          onChange={handleChange}
+          value={formData.botText}
+        />
+        <textarea
+          placeholder="comments"
+          className="form--input"
+          name="comments"
+          onChange={handleChange}
+          value={formData.comments}
+        />
+
         <button className="form--button" onClick={handleOnClick}>
           Get a new meme image 🖼
         </button>
