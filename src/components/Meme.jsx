@@ -1,19 +1,17 @@
 import React from "react"
-import memesData from "../memesData.js"
 
 export default function Meme() {
   const [meme, setMeme] = React.useState({
     topText: "",
-    bottomText: "",
+    botText: "",
     randomImage: "http://i.imgflip.com/1bij.jpg",
   })
 
-  const [allMemeImages, setAllMemeImages] = React.useState(memesData)
+  const [allMemes, setAllMemes] = React.useState([])
 
-  function handleOnClick() {
-    const memesArray = memesData.data.memes
-    const randomNumber = Math.floor(Math.random() * memesData.data.memes.length)
-    const url = memesArray[randomNumber].url
+  function getMemeImage() {
+    const randomNumber = Math.floor(Math.random() * allMemes.length)
+    const url = allMemes[randomNumber].url
 
     setMeme((prevMeme) => {
       return {
@@ -23,22 +21,24 @@ export default function Meme() {
     })
   }
 
-  const [formData, setFormData] = React.useState({
-    topText: "",
-    botText: "",
-    comments: "",
-  })
-
   function handleChange(event) {
-    setFormData((prevData) => {
+    const { value, name } = event.target
+    setMeme((prevData) => {
       return {
         ...prevData,
-        [event.target.name]: event.target.value,
+        [name]: value,
       }
     })
-    console.log(formData)
+    console.log(meme)
   }
 
+  React.useEffect(() => {
+    fetch("https://api.imgflip.com/get_memes")
+      .then((response) => response.json())
+      .then((data) => setAllMemes(data.data.memes))
+  }, [])
+
+  console.log(allMemes)
   return (
     <main>
       <div className="form">
@@ -46,30 +46,26 @@ export default function Meme() {
           type="text"
           placeholder="Top text"
           className="form--input"
-          name="topText"
           onChange={handleChange}
-          value={formData.topText}
+          name="topText"
+          value={meme.topText}
         />
         <input
           type="text"
           placeholder="Bottom text"
           className="form--input"
+          onChange={handleChange}
           name="botText"
-          onChange={handleChange}
-          value={formData.botText}
+          value={meme.botText}
         />
-        <textarea
-          placeholder="comments"
-          className="form--input"
-          name="comments"
-          onChange={handleChange}
-          value={formData.comments}
-        />
-
-        <button className="form--button" onClick={handleOnClick}>
+        <button className="form--button" onClick={getMemeImage}>
           Get a new meme image 🖼
         </button>
-        <img src={meme.randomImage} className="form--button" />
+      </div>
+      <div className="meme">
+        <img src={meme.randomImage} className="meme--image" />
+        <h2 className="meme--text top">{meme.topText}</h2>
+        <h2 className="meme--text bottom">{meme.botText}</h2>
       </div>
     </main>
   )
